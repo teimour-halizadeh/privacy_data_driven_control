@@ -22,9 +22,8 @@ Bs = np.array([[0.004, -0.087],
 # blue ellipsoid parameters
 A_INV_12 = np.diag([1, 0.05]) 
 ZETA = np.array([[1],[1]]) 
-EPS_VAL= 0.2 # offset value
-TRUE_SYSTEM = np.array([[1.49], [1.02]])
-TRUE_SYSTEM = np.array([[1], [1.04]])
+EPS_VAL= 0.03 # offset value
+TRUE_SYSTEM = ZETA + np.array([[0.01],[0.04]])
 
 
 # nominal system parameters
