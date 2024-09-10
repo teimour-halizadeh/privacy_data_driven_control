@@ -23,6 +23,9 @@ Bs = np.array([[0.004, -0.087],
 A_INV_12 = np.diag([1, 0.05]) 
 ZETA = np.array([[1],[1]]) 
 EPS_VAL= 0.2 # offset value
+TRUE_SYSTEM = np.array([[1.49], [1.02]])
+TRUE_SYSTEM = np.array([[1], [1.04]])
+
 
 # nominal system parameters
 T = 20
