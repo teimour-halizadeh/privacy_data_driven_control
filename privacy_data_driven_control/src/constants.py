@@ -22,7 +22,7 @@ Bs = np.array([[0.004, -0.087],
 # blue ellipsoid parameters
 A_INV_12 = np.diag([1, 0.05]) 
 ZETA = np.array([[1],[1]]) 
-EPS_VAL= 0.03 # offset value
+GAMMA_VAL= 0.03 # offset value
 TRUE_SYSTEM = ZETA + np.array([[0.01],[0.04]])
 
 
@@ -40,7 +40,7 @@ THRESHOLD = 0.2
 T_INJECTION = 10
 BETA = 0.5
 
-# Data set parameters for disturbance epsilon relation
+# Data set parameters for disturbance gamma relation
 NUM_DATA_SETS = 10**3
 DIST_RANGE = [0, 0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16]
-EPSILON_RANGE = np.arange(0,0.1,0.001)
+GAMMA_RANGE = np.arange(0,0.1,0.001)

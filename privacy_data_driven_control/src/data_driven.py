@@ -36,7 +36,7 @@ class Plant():
         transforming_data(X1, X0, U0, F1, G1):
             Transforms the collected data using given transformation matrices F1 and G1.
 
-        post_processing_controller(F1, G1, eps_bar, key_range, Bs):
+        post_processing_controller(F1, G1, gamma_bar, key_range, Bs):
             Adjusts the transformation matrices F2 and G2 based on controller constraints.
 
         get_traject_bias(K, x0, T, T_injection, beta, ainf):
@@ -92,10 +92,10 @@ class Plant():
 
 
     def post_processing_controller(self, F1: np.ndarray, G1: np.ndarray,
-                                    eps_bar: float, key_range: float, Bs: np.ndarray) -> Tuple[
+                                    gamma_bar: float, key_range: float, Bs: np.ndarray) -> Tuple[
                                         np.ndarray, np.ndarray]:
 
-        con = eps_bar/(LA.norm(Bs,ord=2))
+        con = gamma_bar/(LA.norm(Bs,ord=2))
 
         deltaF2 = self.random_matrix(self.num_inputs, self.num_states, key_range)
         deltaG2 = self.random_matrix(self.num_inputs, self.num_inputs, key_range)
@@ -104,7 +104,7 @@ class Plant():
         deltaG2 = deltaG2 /LA.norm(deltaG2, ord=2)
 
         G2 = G1
-        F2 = F1 - 0.999 * con * deltaF2
+        F2 = F1 + 0.9999 * con * deltaF2
 
         
 
@@ -142,7 +142,7 @@ class Cloud():
         ellipsoid_parameters(X1, X0, U0, disturbance_bound):
             Computes the matrices bA, bB, bC, and bQ for the QMI set using input data and a disturbance bound.
 
-        get_controller_cvxpy(bA, bB, bC, epsilon):
+        get_controller_cvxpy(bA, bB, bC, gamma):
             Solves a feasibility problem using the computed ellipsoid parameters or those provided by the user. 
             This method uses CVXPY with MOSEK as the backend solver. Other solvers can be specified, but MOSEK 
             has been empirically found to yield better precision. Returns the solution status, and the 
@@ -175,7 +175,7 @@ class Cloud():
 
 
     def get_controller_cvxpy(self, bA: np.ndarray, bB: np.ndarray,
-                              bC: np.ndarray, epsilon: float) -> Tuple[
+                              bC: np.ndarray, gamma: float) -> Tuple[
                                   bool, np.ndarray, np.ndarray]:
 
         n =  np.size(bC, 1)
@@ -193,8 +193,8 @@ class Cloud():
         # The operator >> denotes matrix inequality.
         constraints = [P >> cp.multiply(1e-6, np.eye(n))]
 
-        constraints += [cp.bmat([[P + bC - cp.multiply(epsilon, constant1 * np.eye(n))
-                                - cp.multiply(epsilon**2, constant2 * np.eye(n)) ,
+        constraints += [cp.bmat([[P + bC - cp.multiply(gamma, constant1 * np.eye(n))
+                                - cp.multiply(gamma**2, constant2 * np.eye(n)) ,
                                     np.zeros((n, n)), -bB.T ],
                                 [np.zeros((n, n)), P, (-cp.vstack((P,Y))).T],
                                 [-bB, -cp.vstack((P,Y)), bA]

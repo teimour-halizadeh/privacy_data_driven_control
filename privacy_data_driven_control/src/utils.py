@@ -8,27 +8,27 @@ def processing_results(loaded_data: Dict[str, Any],
                         bins: List[float]) -> Tuple[pd.DataFrame, pd.DataFrame]:
 
    
-    disturbance_epsilon_results = loaded_data["disturbance_epsilon_results"]
+    disturbance_gamma_results = loaded_data["disturbance_gamma_results"]
     max_of_disturbance = loaded_data["max_of_disturbance"]
     num_data_sets = loaded_data["num_data_sets"]
-    # print(disturbance_epsilon_results)
-    df = pd.DataFrame(data=disturbance_epsilon_results, 
+    # print(disturbance_gamma_results)
+    df = pd.DataFrame(data=disturbance_gamma_results, 
                     columns=max_of_disturbance)
 
 
-    cut_epsbar = []
+    cut_gamma_bar = []
 
-    for i in range(np.size(disturbance_epsilon_results, 1)):
-        z = pd.cut(disturbance_epsilon_results[:,i], bins=bins)
+    for i in range(np.size(disturbance_gamma_results, 1)):
+        z = pd.cut(disturbance_gamma_results[:,i], bins=bins)
         y = pd.get_dummies(z, dtype=float).sum(axis=0)
-        cut_epsbar.append(y)
+        cut_gamma_bar.append(y)
 
 
-    df_epsbar_dmax = pd.DataFrame(cut_epsbar).transpose()
-    df_epsbar_dmax = df_epsbar_dmax/num_data_sets
-    df_epsbar_dmax = df_epsbar_dmax.loc[::-1]
-    df_epsbar_dmax.columns = max_of_disturbance
+    df_gamma_bar_dmax = pd.DataFrame(cut_gamma_bar).transpose()
+    df_gamma_bar_dmax = df_gamma_bar_dmax/num_data_sets
+    df_gamma_bar_dmax = df_gamma_bar_dmax.loc[::-1]
+    df_gamma_bar_dmax.columns = max_of_disturbance
 
 
-    return df, df_epsbar_dmax
+    return df, df_gamma_bar_dmax
 
